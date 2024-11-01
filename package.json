@@ -1,17 +1,20 @@
 {
 	"name": "r-python-converter",
 	"publisher": "seriousbenentertainment",
-    "preview": false,
+	"preview": false,
 	"icon": "Logo.png",
 	"license": "MIT",
 	"displayName": "Copilot R-Python converter",
 	"description": "Chat extension, transforming R into Python code and vice versa.",
+    "version": "0.3.3",
 	"repository": {
 		"type": "github",
 		"url": "https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension",
-        "directory": "/DrBenjamin/MinIO-VS-Code-Extension"
+		"directory": "/DrBenjamin/MinIO-VS-Code-Extension"
 	},
-	"version": "0.2.0",
+	"bugs": {
+		"url": "https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension/issues"
+	},
 	"engines": {
 		"vscode": "^1.95.0"
 	},
@@ -20,126 +23,63 @@
 		"Chat"
 	],
 	"activationEvents": [],
+	"l10n": "./l10n",
+	"main": "./dist/extension.js",
 	"contributes": {
 		"chatParticipants": [
 			{
-				"id": "chat-sample.r-python",
-				"fullName": "R-Python Converter",
+				"id": "vscode-websearchforcopilot.websearch",
+				"fullName": "%chatParticipant.websearch.fullName%",
 				"name": "r-python",
-				"description": "What libraries shoud I use to convert the code?",
+				"description": "%chatParticipant.websearch.description%",
 				"isSticky": true,
 				"disambiguation": [
 					{
-						"category": "r-python",
-						"description": "The user wants to convert source code from R to Python or Python to R using the proved libraries.",
+						"category": "web_questions",
+						"description": "This provides up-to-date and relevant information from the web. You'll want to use this if you think the user wants:\n* something directly from the internet\n*a topic that is brand new that you don't know about\n*a topic that is changing rapidly that your knowledge might be out of date",
 						"examples": [
-							"Convert using dyplr, tidyverse and base R.",
-							"Convert using pandas, numpy and matplotlib."
+							"Shiny https://shiny.posit.co",
+							"Streamlit https://streamlit.io"
 						]
 					}
 				]
-			},
-			{
-				"id": "chat-tools.tools",
-				"fullName": "Tool User",
-				"name": "tools",
-				"description": "I use tools",
-				"isSticky": true,
-				"commands": [
-					{
-						"name": "list",
-						"description": "List all available tools"
-					},
-					{
-						"name": "all",
-						"description": "Use all registered tools. By default, only this extension's tools are used."
-					}
-				]
-			}
-		],
-		"languageModelTools": [
-			{
-				"name": "chat-tools_tabCount",
-				"tags": [
-					"editors",
-					"chat-tools"
-				],
-				"toolReferenceName": "tabCount",
-				"displayName": "Tab Count",
-				"modelDescription": "The number of active tabs in a tab group",
-				"icon": "$(files)",
-				"inputSchema": {
-					"type": "object",
-					"properties": {
-						"tabGroup": {
-							"type": "number",
-							"description": "The index of the tab group to check. This is optional- if not specified, the active tab group will be checked.",
-							"default": 0
-						}
-					}
-				}
-			},
-			{
-				"name": "chat-tools-findFiles",
-				"tags": [
-					"files",
-					"search",
-					"chat-tools"
-				],
-				"displayName": "Find Files",
-				"modelDescription": "Search for files in the current workspace",
-				"inputSchema": {
-					"type": "object",
-					"properties": {
-						"pattern": {
-							"type": "string",
-							"description": "Search for files that match this glob pattern"
-						}
-					},
-					"required": [
-						"pattern"
-					]
-				}
-			},
-			{
-				"name": "chat-tools-runInTerminal",
-				"tags": [
-					"terminal",
-					"chat-tools"
-				],
-				"displayName": "Run in Terminal",
-				"modelDescription": "Run a command in a terminal and return the output",
-				"inputSchema": {
-					"type": "object",
-					"properties": {
-						"command": {
-							"type": "string",
-							"description": "The command to run"
-						}
-					},
-					"required": [
-						"command"
-					]
-				}
 			}
 		]
 	},
-	"main": "./out/extension.js",
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint",
-		"watch": "tsc -watch -p ./"
-	},
-	"dependencies": {
-		"@vscode/prompt-tsx": "^0.3.0-alpha.12"
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir dist",
+		"watch-tests": "tsc -p . -w --outDir dist",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "vscode-test"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.13.0",
-		"@stylistic/eslint-plugin": "^2.9.0",
-		"@types/node": "^20",
-		"eslint": "^9.13.0",
-		"typescript": "^5.6.2",
-		"typescript-eslint": "^8.11.0"
+		"@types/jsdom": "^21.1.7",
+		"@types/mocha": "^10.0.9",
+		"@types/node": "20.x",
+		"@types/vscode": "^1.94.0",
+		"@typescript-eslint/eslint-plugin": "^6.13.1",
+		"@typescript-eslint/parser": "^6.13.1",
+		"@vscode/test-cli": "^0.0.10",
+		"@vscode/test-electron": "^2.4.1",
+		"eslint": "^8.54.0",
+		"eslint-plugin-header": "^3.1.1",
+		"ts-loader": "^9.5.1",
+		"typescript": "^5.6.3",
+		"webpack": "^5.95.0",
+		"webpack-cli": "^5.1.4"
+	},
+	"dependencies": {
+		"@azure-rest/ai-inference": "^1.0.0-beta.2",
+		"@azure/core-auth": "^1.8.0",
+		"@azure/core-sse": "^2.1.3",
+		"@microsoft/tiktokenizer": "^1.0.8",
+		"@vscode/prompt-tsx": "^0.3.0-alpha.12",
+		"cheerio": "^1.0.0-rc.12",
+		"jsdom": "^25.0.1"
 	}
 }
