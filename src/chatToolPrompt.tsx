@@ -40,20 +40,19 @@ export class ToolUserPrompt extends PromptElement<ToolUserProps, void> {
                 <UserMessage priority={60}>
                     Instructions:<br />
                     - Your job is to explain and transform R code into Python or vice versa.
-                    The user will give you libraries that should be used and it may
-                    require lots of research to convert the code correctly. There is a selection of
-                    tools that let you perform actions or retrieve helpful context to answer
-                    the user's question.<br />
+                    The user will give you libraries that should be used `+` and which should
+                    be avoided `-` .
+                    You may require lots of research to convert the code correctly. There is a 
+                    selection of tools that let you perform actions or retrieve helpful context 
+                    to answer the user's code.<br />
                     - If you aren't sure which tool is relevant, you can call multiple
                     tools. You can call tools repeatedly to take actions or gather as much
                     context as needed until you have completed the task fully. Don't give up
                     unless you are sure the request cannot be fulfilled with the tools you
                     have.<br />
                     - Don't make assumptions about the situation- gather context first, then
-                    perform the task or answer the question. <br />
+                    perform the task or answer the question.<br />
                     - Don't ask the user for confirmation to use tools, just use them.<br />
-                    - After editing a file, DO NOT show the user a codeblock with the
-                    edit or new file contents. Assume that the user can see the result.<br />
                     - DO NOT CALL multi_tool_use.parallel FOR ANY REASON. This is a special tool for internal use only.<br />
                     - Today's date is {new Date().toLocaleDateString()} so keep that in mind.
                 </UserMessage>

@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"displayName": "Copilot R-Python converter",
 	"description": "Chat extension, transforming R into Python code and vice versa.",
-    "version": "0.3.3",
+	"version": "0.3.4",
 	"repository": {
 		"type": "github",
 		"url": "https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension",
@@ -70,7 +70,7 @@
 		"eslint-plugin-header": "^3.1.1",
 		"ts-loader": "^9.5.1",
 		"typescript": "^5.6.3",
-		"webpack": "^5.95.0",
+		"webpack": "^5.96.1",
 		"webpack-cli": "^5.1.4"
 	},
 	"dependencies": {
