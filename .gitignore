@@ -4,3 +4,4 @@ node_modules
 .vscode-test/
 *.vsix
 cached-embeddings.json
+src/simple.ts
