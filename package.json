@@ -1,11 +1,11 @@
 {
-	"name": "chatty",
+	"name": "r-python-converter",
 	"publisher": "seriousbenentertainment",
-	"displayName": "Copilot Chatty",
-	"description": "Chat extension, a trusty cat tutor that will can teach you computer science topics.",
+	"displayName": "Copilot R-Python converter",
+	"description": "Chat extension, transforming R into Python code and vice versa.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension"
 	},
 	"version": "0.1.0",
 	"engines": {
