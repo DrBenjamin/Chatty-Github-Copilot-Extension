@@ -7,8 +7,9 @@
 	"displayName": "Copilot R-Python converter",
 	"description": "Chat extension, transforming R into Python code and vice versa.",
 	"repository": {
-		"type": "git",
-		"url": "https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension"
+		"type": "github",
+		"url": "https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension",
+        "directory": "/DrBenjamin/MinIO-VS-Code-Extension"
 	},
 	"version": "0.2.0",
 	"engines": {
@@ -25,22 +26,21 @@
 				"id": "chat-sample.r-python",
 				"fullName": "R-Python Converter",
 				"name": "r-python",
-				"description": "What can I convert for you?",
+				"description": "What libraries shoud I use to convert the code?",
 				"isSticky": true,
 				"disambiguation": [
 					{
 						"category": "r-python",
-						"description": "The user wants to learn a specific data science topic in an informal way.",
+						"description": "The user wants to convert source code from R to Python or Python to R using the proved libraries.",
 						"examples": [
-							"Teach me sparklyr.",
-							"Explain to me what is a decorator in Python.",
-							"Can you explain to me what is a constructor?"
+							"Convert using dyplr, tidyverse and base R.",
+							"Convert using pandas, numpy and matplotlib."
 						]
 					}
 				]
 			},
 			{
-				"id": "chat-tools-sample.tools",
+				"id": "chat-tools.tools",
 				"fullName": "Tool User",
 				"name": "tools",
 				"description": "I use tools",
@@ -59,10 +59,10 @@
 		],
 		"languageModelTools": [
 			{
-				"name": "chat-tools-sample_tabCount",
+				"name": "chat-tools_tabCount",
 				"tags": [
 					"editors",
-					"chat-tools-sample"
+					"chat-tools"
 				],
 				"toolReferenceName": "tabCount",
 				"displayName": "Tab Count",
@@ -80,11 +80,11 @@
 				}
 			},
 			{
-				"name": "chat-tools-sample_findFiles",
+				"name": "chat-tools-findFiles",
 				"tags": [
 					"files",
 					"search",
-					"chat-tools-sample"
+					"chat-tools"
 				],
 				"displayName": "Find Files",
 				"modelDescription": "Search for files in the current workspace",
@@ -102,10 +102,10 @@
 				}
 			},
 			{
-				"name": "chat-tools-sample_runInTerminal",
+				"name": "chat-tools-runInTerminal",
 				"tags": [
 					"terminal",
-					"chat-tools-sample"
+					"chat-tools"
 				],
 				"displayName": "Run in Terminal",
 				"modelDescription": "Run a command in a terminal and return the output",
@@ -121,12 +121,6 @@
 						"command"
 					]
 				}
-			}
-		],
-		"commands": [
-			{
-				"command": "cat.namesInEditor",
-				"title": "Use Cat Names in Editor"
 			}
 		]
 	},

@@ -38,7 +38,7 @@ export function registerToolUserChatParticipant(context: vscode.ExtensionContext
         // Use all tools, or tools with the tags that are relevant.
         const tools = request.command === 'all' ?
             vscode.lm.tools :
-            vscode.lm.tools.filter(tool => tool.tags.includes('chat-tools-sample'));
+            vscode.lm.tools.filter(tool => tool.tags.includes('chat-tools'));
         const options: vscode.LanguageModelChatRequestOptions = {
             justification: 'To make a request to @toolsTSX',
         };
@@ -132,7 +132,7 @@ export function registerToolUserChatParticipant(context: vscode.ExtensionContext
         };
     };
 
-    const toolUser = vscode.chat.createChatParticipant('chat-tools-sample.tools', handler);
+    const toolUser = vscode.chat.createChatParticipant('chat-tools.tools', handler);
     toolUser.iconPath = new vscode.ThemeIcon('tools');
     context.subscriptions.push(toolUser);
 }
