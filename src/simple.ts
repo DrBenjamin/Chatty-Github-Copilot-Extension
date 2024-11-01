@@ -1,11 +1,9 @@
-import { renderPrompt } from '@vscode/prompt-tsx';
 import * as vscode from 'vscode';
-import { PlayPrompt } from './play';
 
 const CAT_NAMES_COMMAND_ID = 'cat.namesInEditor';
-const CAT_PARTICIPANT_ID = 'chat-sample.cat';
+const CAT_PARTICIPANT_ID = 'chat-sample.r-python';
 
-interface ICatChatResult extends vscode.ChatResult {
+interface IChatResult extends vscode.ChatResult {
     metadata: {
         command: string;
     }
@@ -13,91 +11,50 @@ interface ICatChatResult extends vscode.ChatResult {
 
 export function registerSimpleParticipant(context: vscode.ExtensionContext) {
 
-    // Define a Cat chat handler. 
-    const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<ICatChatResult> => {
+    // Define a chat handler. 
+    const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<IChatResult> => {
         // To talk to an LLM in your subcommand handler implementation, your
         // extension can use VS Code's `requestChatAccess` API to access the Copilot API.
         // The GitHub Copilot Chat extension implements this provider.
-        if (request.command === 'randomTeach') {
-            stream.progress('Picking the right topic to teach...');
-            const topic = getTopic(context.history);
-            try {
-                const messages = [
-                    vscode.LanguageModelChatMessage.User('You are a cat! Your job is to explain computer science concepts in the funny manner of a cat. Always start your response by stating what concept you are explaining. Always include code samples.'),
-                    vscode.LanguageModelChatMessage.User(topic)
-                ];
-
-                const chatResponse = await request.model.sendRequest(messages, {}, token);
-                for await (const fragment of chatResponse.text) {
-                    stream.markdown(fragment);
-                }
-
-            } catch (err) {
-                handleError(logger, err, stream);
+        try {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                return { metadata: { command: 'randomTeach' } }; // Return a default
             }
+            const document = editor.document;
+            const fileContent = document.getText();
+            const messages = [
+                vscode.LanguageModelChatMessage.User(`Think carefully and step by step.
+                    Your job is to explain and transform R code into Python and vice versa. Always start your response by stating what concept you are explaining. Always include code samples.`),
+                vscode.LanguageModelChatMessage.User(fileContent),
+                vscode.LanguageModelChatMessage.User(request.prompt)
+            ];
 
-            stream.button({
-                command: CAT_NAMES_COMMAND_ID,
-                title: vscode.l10n.t('Use Cat Names in Editor')
-            });
-
-            logger.logUsage('request', { kind: 'randomTeach' });
-            return { metadata: { command: 'randomTeach' } };
-        } else if (request.command === 'play') {
-            stream.progress('Throwing away the computer science books and preparing to play with some Python code...');
-            try {
-                // Here's an example of how to use the prompt-tsx library to build a prompt
-                const { messages } = await renderPrompt(
-                    PlayPrompt,
-                    { userQuery: request.prompt },
-                    { modelMaxPromptTokens: request.model.maxInputTokens },
-                    request.model);
-
-                const chatResponse = await request.model.sendRequest(messages, {}, token);
-                for await (const fragment of chatResponse.text) {
-                    stream.markdown(fragment);
-                }
-
-            } catch (err) {
-                handleError(logger, err, stream);
+            const chatResponse = await request.model.sendRequest(messages, {}, token);
+            for await (const fragment of chatResponse.text) {
+                // Process the output from the language model
+                // Replace all python function definitions with cat sounds to make the user stop looking at the code and start playing with the cat
+                //const catFragment = fragment.replaceAll('def', 'meow');
+                stream.markdown(fragment);
             }
-
-            logger.logUsage('request', { kind: 'play' });
-            return { metadata: { command: 'play' } };
-        } else {
-            try {
-                const messages = [
-                    vscode.LanguageModelChatMessage.User(`You are a cat! Think carefully and step by step like a cat would.
-                        Your job is to explain computer science concepts in the funny manner of a cat, using cat metaphors. Always start your response by stating what concept you are explaining. Always include code samples.`),
-                    vscode.LanguageModelChatMessage.User(request.prompt)
-                ];
-
-                const chatResponse = await request.model.sendRequest(messages, {}, token);
-                for await (const fragment of chatResponse.text) {
-                    // Process the output from the language model
-                    // Replace all python function definitions with cat sounds to make the user stop looking at the code and start playing with the cat
-                    const catFragment = fragment.replaceAll('def', 'meow');
-                    stream.markdown(catFragment);
-                }
-            } catch (err) {
-                handleError(logger, err, stream);
-            }
-
-            logger.logUsage('request', { kind: '' });
-            return { metadata: { command: '' } };
+        } catch (err) {
+            handleError(logger, err, stream);
         }
+
+        logger.logUsage('request', { kind: '' });
+        return { metadata: { command: '' } };
     };
 
     // Chat participants appear as top-level options in the chat input
     // when you type `@`, and can contribute sub-commands in the chat input
     // that appear when you type `/`.
     const cat = vscode.chat.createChatParticipant(CAT_PARTICIPANT_ID, handler);
-    cat.iconPath = vscode.Uri.joinPath(context.extensionUri, 'cat.jpeg');
+    cat.iconPath = vscode.Uri.joinPath(context.extensionUri, 'RP.png');
     cat.followupProvider = {
-        provideFollowups(_result: ICatChatResult, _context: vscode.ChatContext, _token: vscode.CancellationToken) {
+        provideFollowups(_result: IChatResult, _context: vscode.ChatContext, _token: vscode.CancellationToken) {
             return [{
                 prompt: 'let us play',
-                label: vscode.l10n.t('Play with the cat'),
+                label: vscode.l10n.t('Play with the converter'),
                 command: 'play'
             } satisfies vscode.ChatFollowup];
         }
@@ -141,8 +98,8 @@ export function registerSimpleParticipant(context: vscode.ExtensionContext) {
                 }
 
                 const messages = [
-                    vscode.LanguageModelChatMessage.User(`You are a cat! Think carefully and step by step like a cat would.
-                    Your job is to replace all variable names in the following code with funny cat variable names. Be creative. IMPORTANT respond just with code. Do not use markdown!`),
+                    vscode.LanguageModelChatMessage.User(`Think carefully and step by step.
+                    Your job is to replace R code with Python code. IMPORTANT respond just with code. Do not use markdown!`),
                     vscode.LanguageModelChatMessage.User(text)
                 ];
                 chatResponse = await model.sendRequest(messages, {}, new vscode.CancellationTokenSource().token);
@@ -195,7 +152,7 @@ function handleError(logger: vscode.TelemetryLogger, err: any, stream: vscode.Ch
     if (err instanceof vscode.LanguageModelError) {
         console.log(err.message, err.code, err.cause);
         if (err.cause instanceof Error && err.cause.message.includes('off_topic')) {
-            stream.markdown(vscode.l10n.t('I\'m sorry, I can only explain computer science concepts.'));
+            stream.markdown(vscode.l10n.t('I\'m sorry, I can only explain data science concepts.'));
         }
     } else {
         // re-throw other errors so they show up in the UI
@@ -219,5 +176,5 @@ function getTopic(history: ReadonlyArray<vscode.ChatRequestTurn | vscode.ChatRes
         });
     });
 
-    return topicsNoRepetition[Math.floor(Math.random() * topicsNoRepetition.length)] || 'I have taught you everything I know. Meow!';
+    return topicsNoRepetition[Math.floor(Math.random() * topicsNoRepetition.length)] || 'I have taught you everything I know.';
 }

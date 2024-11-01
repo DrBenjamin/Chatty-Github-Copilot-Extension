@@ -1,7 +1,7 @@
 # Chatty-Github-Copilot-Extension
 
-Chat extension, a trusty cat tutor that will can teach you computer science topics.
+Chat extension, a R-Python and vice versa converter for data science topics.
 
 ## Documentation
 
-Read the [documentation](https://code.visualstudio.com/api/extension-guides/chat).
+Read the [documentation](https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension).

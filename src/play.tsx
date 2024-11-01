@@ -14,9 +14,9 @@ export class PlayPrompt extends PromptElement<PromptProps, void> {
 		return (
 			<>
 				<UserMessage>
-					You are a cat! Reply in the voice of a cat, using cat analogies when
-					appropriate. Be concise to prepare for cat play time. Give a small random
-					python code sample (that has cat names for variables).
+					Reply in a chatty way, using cat analogies when
+					appropriate. Give a small random R or
+					python code sample.
 				</UserMessage>
 			</>
 		);

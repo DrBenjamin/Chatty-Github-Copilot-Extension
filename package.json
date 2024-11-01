@@ -1,13 +1,16 @@
 {
 	"name": "r-python-converter",
 	"publisher": "seriousbenentertainment",
+    "preview": false,
+	"icon": "Logo.png",
+	"license": "MIT",
 	"displayName": "Copilot R-Python converter",
 	"description": "Chat extension, transforming R into Python code and vice versa.",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/DrBenjamin/R-Python-Converter-Github-Copilot-Extension"
 	},
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"engines": {
 		"vscode": "^1.95.0"
 	},
@@ -19,39 +22,19 @@
 	"contributes": {
 		"chatParticipants": [
 			{
-				"id": "chat-sample.cat",
-				"fullName": "Cat",
-				"name": "cat",
-				"description": "Meow! What can I teach you?",
+				"id": "chat-sample.r-python",
+				"fullName": "R-Python Converter",
+				"name": "r-python",
+				"description": "What can I convert for you?",
 				"isSticky": true,
-				"commands": [
-					{
-						"name": "randomTeach",
-						"description": "Pick at random a computer science concept then explain it in purfect way of a cat"
-					},
-					{
-						"name": "play",
-						"description": "Do whatever you want, you are a cat after all",
-						"disambiguation": [
-							{
-								"category": "cat_play",
-								"description": "The user just wants to relax and see the cat play.",
-								"examples": [
-									"Enough learning, let the cat play with a ball of yarn",
-									"Can you show me a cat playing with a laser pointer?"
-								]
-							}
-						]
-					}
-				],
 				"disambiguation": [
 					{
-						"category": "cat",
-						"description": "The user wants to learn a specific computer science topic in an informal way.",
+						"category": "r-python",
+						"description": "The user wants to learn a specific data science topic in an informal way.",
 						"examples": [
-							"Teach me C++ pointers using metaphors",
-							"Explain to me what is a linked list in a simple way",
-							"Can you explain to me what is a function in programming?"
+							"Teach me sparklyr.",
+							"Explain to me what is a decorator in Python.",
+							"Can you explain to me what is a constructor?"
 						]
 					}
 				]
